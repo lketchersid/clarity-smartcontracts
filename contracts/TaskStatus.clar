@@ -10,21 +10,51 @@
 
 
 ;; define local storage
+
+;; these are the basic task and subtask possible status states
+;; ideally these should be mutually exclusive. will put a test for that in a private function
+;; by default a task is not used until it is either moved to notstarted, inprocess, complete or cancelled 
 (define-data-var notused bool true)
-(define-data-var idle bool false)
+(define-data-var notstarted bool false)
 (define-data-var inprocess bool false)
 (define-data-var complete bool false)
 (define-data-var cancelled bool false)
 
 ;; define read-only functions
 (define-read-only (get-task-status)
-  {balance: (var-get balance), buyerOk: (var-get buyerOk), sellerOk: (var-get sellerOk)}
+  {notused: (var-get notused), notstarted: (var-get notstarted), inprocess: (var-get inprocess), complete: (var-get complete), cancelled: (var-get cancelled)}
 )
 
 
 ;; define private functions
-
+;; this will check the integrity of the task settings and error out
 
 
 ;; define public functions
+;;
+;; these functions allow the setting of the different task statuses
+(define-public (start-task)
+	(var-set inprocess true)
+	(var-set notused false)
+	(ok)
+)
 
+(define-public (task-used)
+	(var-set notused false)
+	(var-set notstarted true)
+	(ok)
+)
+
+(define-public (task-complete)
+	(var-set notstarted false)
+	(var-set inprocess false)
+	(var-set complete true)
+	(ok)
+)
+
+(define-public (cancel-task)
+	(var-set inprocess false)
+	(var-set notused false)
+	(var-set notstarted false)
+	(ok)
+)
