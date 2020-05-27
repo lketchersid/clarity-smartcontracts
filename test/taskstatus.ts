@@ -19,13 +19,14 @@ describe("task status contract test suite", () => {
       await taskStatusClient.deployContract();
     });
 
-    it("should return task status list, async () => {
+    it("should return initial task status list", async () => {
       const query = taskStatusClient.createQuery({ method: { name: "get-task-status", args: [] } });
       const returns = await taskStatusClient.submitQuery(query);
-      const result = Result.unwrapString(returns);
-      assert.equal(result, "hello world");
+      const result = Result.unwrap(returns);
+      assert.equal(result, "(tuple (cancelled false) (complete false) (inprocess false) (notstarted false) (notused true))");
     });
 
+  });
 
   after(async () => {
     await provider.close();

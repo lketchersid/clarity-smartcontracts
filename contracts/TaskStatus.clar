@@ -34,27 +34,31 @@
 ;;
 ;; these functions allow the setting of the different task statuses
 (define-public (start-task)
-	(var-set inprocess true)
-	(var-set notused false)
-	(ok)
+	(begin
+		(var-set inprocess true)
+		(var-set notused false)
+	(ok true))
 )
 
 (define-public (task-used)
-	(var-set notused false)
-	(var-set notstarted true)
-	(ok)
+	(begin
+		(var-set notused false)
+		(var-set notstarted true)
+	(ok true))
 )
 
 (define-public (task-complete)
-	(var-set notstarted false)
-	(var-set inprocess false)
-	(var-set complete true)
-	(ok)
+	(begin
+		(var-set notstarted false)
+		(var-set inprocess false)
+		(var-set complete true)
+	(ok true))
 )
 
 (define-public (cancel-task)
-	(var-set inprocess false)
-	(var-set notused false)
-	(var-set notstarted false)
-	(ok)
+	(begin
+		(var-set inprocess false)
+		(var-set notused false)
+		(var-set notstarted false)
+	(ok true))
 )
