@@ -19,7 +19,8 @@
 (define-data-var inprocess bool false)
 (define-data-var complete bool false)
 (define-data-var cancelled bool false)
-
+(define-data-var taskstarttime uint u0)
+(define-data-var currentblockheight uint block-height)
 
 ;; define read-only functions
 (define-read-only (get-task-status)
@@ -29,9 +30,9 @@
 
 ;; define private functions
 ;; this will check the integrity of the task settings and error out
-(define-private (if-task-complete-or-cancelled-cannot-be-used-err)
+(define-private (if-task-complete-cannot-be-used-err)
 	(unwrap-panic
-		(if (or (var-get complete) (var-get cancelled))
+		(if (var-get complete)
 			(err 1)
 			(ok true)
 		)
@@ -44,15 +45,16 @@
 ;; these functions allow the setting of the different task statuses
 (define-public (start-task)
 	(begin
-		(if-task-complete-or-cancelled-cannot-be-used-err)
+		(if-task-complete-cannot-be-used-err)
 		(var-set inprocess true)
 		(var-set notused false)
-	(ok true))
+		(var-set taskstarttime (get-block-info? time (var-get currentblockheight)))
+	(ok taskstarttime))
 )
 
 (define-public (task-used)
 	(begin
-		(if-task-complete-or-cancelled-cannot-be-used-err)
+		(if-task-complete-cannot-be-used-err)
 		(var-set notused false)
 		(var-set notstarted true)
 	(ok true))
@@ -60,7 +62,7 @@
 
 (define-public (task-complete)
 	(begin
-		(if-task-complete-or-cancelled-cannot-be-used-err)
+		(if-task-complete-cannot-be-used-err)
 		(var-set notstarted false)
 		(var-set inprocess false)
 		(var-set complete true)
@@ -69,7 +71,7 @@
 
 (define-public (cancel-task)
 	(begin
-		(if-task-complete-or-cancelled-cannot-be-used-err)
+		(if-task-complete-cannot-be-used-err)
 		(var-set inprocess false)
 		(var-set notused false)
 		(var-set notstarted false)

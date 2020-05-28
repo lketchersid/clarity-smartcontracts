@@ -26,6 +26,20 @@ describe("task status contract test suite", () => {
       assert.equal(result, "(tuple (cancelled false) (complete false) (inprocess false) (notstarted false) (notused true))");
     });
 
+    it("should fail if task is already complete", async () => {
+      const initialQuery = taskStatusClient.createQuery({
+        method: { name: "task-complete", args: [] }
+      });
+      const initialReceipt = await taskStatusClient.submitQuery(initialQuery);
+      const initialResult = Result.unwrap(initialReceipt);
+      const query = taskStatusClient.createQuery({
+        method: { name: "start-task", args: [] }
+      });
+      const returns = await taskStatusClient.submitQuery(query);
+      const result = Result.unwrap(returns)
+      assert.equal(result, "(ok true)");
+    });
+
   });
 
   after(async () => {
