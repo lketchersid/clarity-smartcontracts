@@ -15,15 +15,17 @@ Prototype for simulating change in a workflow's task or sub-task status
 -- cancelled
 - Once a task is completed or cancelled it should not be able to be acted upon
 
-Smart Contract: contracts/TaskStatus.clar
-Test: test/taskstatus.ts
+Files
+- Smart Contract: contracts/TaskStatus.clar
+- Test: test/taskstatus.ts
 
 ## Workflow tasks with status and timestamps from STX Blockchain
  
  In Progress
 
-Smart Contract: contracts/TaskStatusWTimeStamps.clar
-Test: test/taskstatuswtimestamps.ts
+Files
+- Smart Contract: contracts/TaskStatusWTimeStamps.clar
+- Test: test/taskstatuswtimestamps.ts
 
 ## Author
 
