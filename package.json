@@ -11,8 +11,8 @@
     "node": ">=10"
   },
   "scripts": {
-    "taskstatus": "mocha 'test/taskstatus.ts",
-    "taskstatuswtimestamps": "mocha 'test/taskstatuswtimestamps.ts'"
+    "taskstatus": "mocha 'test/taskstatus.ts'",
+    "taskstatuswtimestamps": "mocha 'test/taskstatuswtimestamps.ts'",
     "test": "mocha 'test/*.ts'"
   },
   "devDependencies": {
