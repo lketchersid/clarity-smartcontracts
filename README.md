@@ -30,6 +30,10 @@ Files
 - Smart Contract: contracts/TaskStatusWTimeStamps.clar
 - Test: test/taskstatuswtimestamps.ts
 
+## Integrate with Friedger's Escrow contract for Task Start and Task Complete (Level 2 Clarity Hackathon)
+
+Yeah, yeah...I'll probably run out of time. But it's a project to come back to.
+
 ## Author
 
 👤 Larry Ketchersid
