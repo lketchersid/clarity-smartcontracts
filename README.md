@@ -20,8 +20,6 @@ Files
 - Test: test/taskstatus.ts
 
 ## Workflow tasks with status and timestamps from STX Blockchain (Level 1 Clarity Hackathon)
- 
- In Progress
 
 Builds on the Level 0 solution to add in timestamps from the STX Blockchain. This may not be a realistic real-world approach. In the [Clarity docs](https://docs.blockstack.org/core/smart/clarityref) it appears that getting the timestamp in this fashion may not provide enough granularity:
 > The time property returns an integer value of the block header time field. This is a Unix epoch timestamp in seconds which roughly corresponds to when the block was mined. Warning: this does not increase monotonically with each block and block times are accurate only to within two hours. See BIP113 for more information.
@@ -30,9 +28,13 @@ Files
 - Smart Contract: contracts/TaskStatusWTimeStamps.clar
 - Test: test/taskstatuswtimestamps.ts
 
-## Integrate with Friedger's Escrow contract for Task Start and Task Complete (Level 2 Clarity Hackathon)
+## Integrate with [@Friedger's Escrow contract](https://github.com/friedger/clarity-smart-contracts/blob/master/contracts/tokens/escrow.clar) for Task Start and Task Complete (Level 2 Clarity Hackathon)
 
-Yeah, yeah...I'll probably run out of time. But it's a project to come back to.
+Yeah, yeah...I'll probably run out of time. But... based on task status of start, complete and cancel, take appropriate action with the escrow contract.
+
+Files
+- Smart Contract: contracts/TaskStatusEscrow.clar
+- Test: test/taskstatusescrow.ts
 
 ## Author
 
