@@ -1,6 +1,6 @@
 {
   "name": "mediasourcery",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": {
     "name": "Larry Ketchersid",
     "email": "ketchersid@sbcglobal.net"
@@ -13,6 +13,7 @@
   "scripts": {
     "taskstatus": "mocha 'test/taskstatus.ts'",
     "taskstatuswtimestamps": "mocha 'test/taskstatuswtimestamps.ts'",
+    "taskstatuswescrow": "mocha 'test/taskstatuswescrow.ts'",
     "test": "mocha 'test/*.ts'"
   },
   "devDependencies": {

@@ -79,5 +79,6 @@
 		(var-set inprocess false)
 		(var-set notused false)
 		(var-set notstarted false)
+		(var-set cancelled true)
 	(ok true))
 )
