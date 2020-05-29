@@ -19,6 +19,7 @@
 (define-data-var inprocess bool false)
 (define-data-var complete bool false)
 (define-data-var cancelled bool false)
+
 (define-data-var taskstarttime uint u0)
 (define-data-var taskcompletetime uint u0)
 (define-data-var taskcanceltime uint u0)
@@ -96,7 +97,7 @@
 	)
 )
 
-(define-public (task-used)
+(define-public (use-task)
 	(begin
 		(if-task-complete-or-cancelled-cannot-be-used-err)
 		(var-set notused false)
@@ -105,11 +106,12 @@
 )
 ;; not much to do here for escrow. Assuming a version of escrow could check if task complete
 ;; could also determine a ratio system for how quickly task was complete versus an SLA time
-(define-public (task-complete)
+(define-public (complete-task)
 	(begin
 		(if-task-complete-or-cancelled-cannot-be-used-err)
 		(var-set notstarted false)
 		(var-set inprocess false)
+		(var-set notused false)
 		(var-set complete true)
 		(var-set taskcompletetime (get-current-block-time))
 		(var-set taskduration (- (var-get taskcompletetime) (var-get taskstarttime)))
