@@ -26,7 +26,15 @@ describe("task status time stamps contract test suite", () => {
       assert.equal(result, "(tuple (cancelled false) (complete false) (inprocess false) (notstarted false) (notused true))");
     });
 
-    it("should return initial changed task status list", async () => {
+
+    it("should return task duration", async () => {
+      const query = taskStatusClient.createQuery({ method: { name: "get-task-duration", args: [] } });
+      const returns = await taskStatusClient.submitQuery(query);
+      const result = Result.unwrap(returns);
+      assert.equal(result, "(ok u0)");
+    });
+
+    it("should return changed task status list", async () => {
       const initialQuery = taskStatusClient.createQuery({
         method: { name: "task-complete", args: [] }
       });
@@ -52,7 +60,7 @@ describe("task status time stamps contract test suite", () => {
       });
       const returns = await taskStatusClient.submitQuery(query);
       const result = Result.unwrap(returns)
-      assert.equal(result, "err 1")
+      assert.equal(result, "(ok u0)")
     });
 
   });
