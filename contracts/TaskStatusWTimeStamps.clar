@@ -23,6 +23,7 @@
 (define-data-var taskcompletetime uint u0)
 (define-data-var taskcanceltime uint u0)
 (define-data-var currentblockheight uint u0)
+(define-data-var taskduration uint u0)
 
 ;; define read-only functions
 (define-read-only (get-task-status)
@@ -32,13 +33,18 @@
 
 ;; define private functions
 ;; this will check the integrity of the task settings and error out
-(define-private (if-task-complete-cannot-be-used-err)
-		(if (var-get complete)
+;; if the task is already completed or cancelled panic
+(define-private (if-task-complete-or-cancelled-cannot-be-used-err)
+	(unwrap-panic
+		(if (or (var-get complete) (var-get cancelled))
 			(err 1)
 			(ok true)
 		)
-
+	)
 )
+
+
+
 ;; huge thanks to @hozzjss for assist this time function
 (define-private (get-current-block-time) 
   (default-to u0 (get-block-info? time block-height)))
@@ -46,13 +52,27 @@
 
 ;; define public functions
 ;;
+;; this function should allow a check on the task time duration, whether complete, cancelled or in-process
+;; if the task is completed or cancelled, provides the previously calculated task duration
+;; if the task is in process, it calculates using current time and the task start time
+;; if the task has not started it should return u0 
+(define-public (get-task-duration)
+	(begin
+		(if (if-task-complete-or-cancelled-cannot-be-used-err)
+			(var-get taskduration)
+			(- (get-current-block-time) (var-get taskstarttime))
+		)
+		(ok (var-get taskduration))
+	)
+)
+
 ;; these functions allow the setting of the different task statuses
+
 (define-public (start-task)
 	(begin
-		(if-task-complete-cannot-be-used-err)
+		(if-task-complete-or-cancelled-cannot-be-used-err)
 		(var-set inprocess true)
 		(var-set notused false)
-		(var-set currentblockheight block-height)
 		(var-set taskstarttime (get-current-block-time))
 		(ok (var-get taskstarttime))
 	)
@@ -60,7 +80,7 @@
 
 (define-public (task-used)
 	(begin
-		(if-task-complete-cannot-be-used-err)
+		(if-task-complete-or-cancelled-cannot-be-used-err)
 		(var-set notused false)
 		(var-set notstarted true)
 		(ok true))
@@ -68,24 +88,28 @@
 
 (define-public (task-complete)
 	(begin
-		(if-task-complete-cannot-be-used-err)
+		(if-task-complete-or-cancelled-cannot-be-used-err)
 		(var-set notstarted false)
 		(var-set inprocess false)
 		(var-set complete true)
-		(var-set currentblockheight block-height)
 		(var-set taskcompletetime (get-current-block-time))
+		(var-set taskduration (- (var-get taskcompletetime) (var-get taskstarttime)))
 		(ok (var-get taskcompletetime))
 	)
 )
 
 (define-public (cancel-task)
 	(begin
-		(if-task-complete-cannot-be-used-err)
+		(if-task-complete-or-cancelled-cannot-be-used-err)
 		(var-set inprocess false)
 		(var-set notused false)
 		(var-set notstarted false)
-		(var-set currentblockheight block-height)
 		(var-set taskcanceltime (get-current-block-time))
+		(var-set taskduration (- (var-get taskcanceltime) (var-get taskstarttime)))
 		(ok (var-get taskcanceltime))
 	)
 )
+
+
+
+
