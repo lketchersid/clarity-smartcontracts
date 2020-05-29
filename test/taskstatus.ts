@@ -32,6 +32,7 @@ describe("task status contract test suite", () => {
       });
       const initialReceipt = await taskStatusClient.submitQuery(initialQuery);
       const initialResult = Result.unwrap(initialReceipt);
+      console.log(initialResult);
       const query = taskStatusClient.createQuery({
         method: { name: "start-task", args: [] }
       });
