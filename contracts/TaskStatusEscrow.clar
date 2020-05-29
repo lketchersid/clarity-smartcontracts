@@ -25,6 +25,11 @@
 (define-data-var currentblockheight uint u0)
 (define-data-var taskduration uint u0)
 
+;; escrow contract storage
+(define-data-var buyerok bool false)
+(define-data-var sellerok bool false)
+(define-data-var escrowbalance uint u0)
+
 ;; define read-only functions
 (define-read-only (get-task-status)
   {notused: (var-get notused), notstarted: (var-get notstarted), inprocess: (var-get inprocess), complete: (var-get complete), cancelled: (var-get cancelled)}
@@ -46,11 +51,15 @@
 ;; thanks to @friedger for his escrow contract
 ;; cancel the escrow
 (define-read-only (cancel-escrow)
- (contract-call? .escrow cancel)
+	(contract-call? .escrow cancel)
 )
 
+;; get the status of the escrow - use this to determine if the task should be started
+(define-read-only (escrow-status)
+	(contract-call? .escrow get-info {balance: (var-set escrowbalance), buyer0k: (var-set buyerok), seller0k: (var-set sellerok)})
+)
 
-;; huge thanks to @hozzjss for assist this time function
+;; huge thanks to @hozzjss for assist with this time function
 (define-private (get-current-block-time) 
   (default-to u0 (get-block-info? time block-height)))
 
@@ -73,13 +82,17 @@
 
 ;; these functions allow the setting of the different task statuses
 
+;; escrow version - if the sender and receiver do not agree and the escrow balance is empty, abort
 (define-public (start-task)
 	(begin
-		(if-task-complete-or-cancelled-cannot-be-used-err)
-		(var-set inprocess true)
-		(var-set notused false)
-		(var-set taskstarttime (get-current-block-time))
-		(ok (var-get taskstarttime))
+		(escrow-status)
+		( if (and (get-var buyerok) (get-var-sellerok) (> escrowbalance 0))
+			(if-task-complete-or-cancelled-cannot-be-used-err)
+			(var-set inprocess true)
+			(var-set notused false)
+			(var-set taskstarttime (get-current-block-time))
+			(ok (var-get taskstarttime))
+		)
 	)
 )
 
@@ -90,7 +103,8 @@
 		(var-set notstarted true)
 		(ok true))
 )
-
+;; not much to do here for escrow. Assuming a version of escrow could check if task complete
+;; could also determine a ratio system for how quickly task was complete versus an SLA time
 (define-public (task-complete)
 	(begin
 		(if-task-complete-or-cancelled-cannot-be-used-err)
