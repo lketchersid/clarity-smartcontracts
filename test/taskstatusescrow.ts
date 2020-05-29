@@ -3,11 +3,13 @@ import { assert } from "chai";
 
 describe("task status with escrow contract test suite", () => {
   let taskStatusClient: Client;
+  let escrowClient: Client;
   let provider: Provider;
 
   before(async () => {
     provider = await ProviderRegistry.createProvider();
     taskStatusClient = new Client("SP3GWX3NE58KXHESRYE4DYQ1S31PQJTCRXB3PE9SB.taskstatusescrow", "taskstatusescrow", provider);
+    escrowClient = new Client("SP3GWX3NE58KXHESRYE4DYQ1S31PQJTCRXB3PE9SB.escrow", "escrow", provider);
   });
 
   it("should have a valid syntax", async () => {
@@ -17,6 +19,7 @@ describe("task status with escrow contract test suite", () => {
   describe("deploying an instance of the contract", () => {
     before(async () => {
       await taskStatusClient.deployContract();
+      await escrowClient.deployContract();
     });
 
     it("should return initial task status list", async () => {
@@ -36,7 +39,7 @@ describe("task status with escrow contract test suite", () => {
 
     it("should return changed task status list", async () => {
       const initialQuery = taskStatusClient.createQuery({
-        method: { name: "task-complete", args: [] }
+        method: { name: "complete-task", args: [] }
       });
       const initialReceipt = await taskStatusClient.submitQuery(initialQuery);
       const initialResult = Result.unwrap(initialReceipt);
