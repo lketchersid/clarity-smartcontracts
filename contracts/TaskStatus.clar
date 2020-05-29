@@ -29,6 +29,7 @@
 
 ;; define private functions
 ;; this will check the integrity of the task settings and error out
+;; if the task is already completed or cancelled panic
 (define-private (if-task-complete-or-cancelled-cannot-be-used-err)
 	(unwrap-panic
 		(if (or (var-get complete) (var-get cancelled))
@@ -42,6 +43,8 @@
 ;; define public functions
 ;;
 ;; these functions allow the setting of the different task statuses
+
+;; sets that the task is in process and used
 (define-public (start-task)
 	(begin
 		(if-task-complete-or-cancelled-cannot-be-used-err)
@@ -50,6 +53,7 @@
 	(ok true))
 )
 
+;; set just that the task will be used. This can be done by a previous task in a workflow
 (define-public (task-used)
 	(begin
 		(if-task-complete-or-cancelled-cannot-be-used-err)
@@ -58,6 +62,7 @@
 	(ok true))
 )
 
+;; set the task as complete
 (define-public (task-complete)
 	(begin
 		(if-task-complete-or-cancelled-cannot-be-used-err)
@@ -67,6 +72,7 @@
 	(ok true))
 )
 
+;; set the task as cancelled
 (define-public (cancel-task)
 	(begin
 		(if-task-complete-or-cancelled-cannot-be-used-err)
